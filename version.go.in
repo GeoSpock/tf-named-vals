@@ -1,0 +1,6 @@
+// MIT license
+// Copyright (c) 2019 GeoSpock Ltd.
+
+package main
+
+const VERSION string = "%VERSION%"
