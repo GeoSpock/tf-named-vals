@@ -1,5 +1,7 @@
 /tf-named-vals
 /version.go
+/dist
+/build
 
 # Binaries for programs and plugins
 *.exe
