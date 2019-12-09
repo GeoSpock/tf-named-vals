@@ -72,7 +72,7 @@ func toJSON(filename string) ([]byte, error) {
 	}
 
 
-	var variables []map[string]interface{}
+	variables := make(map[string]map[string]interface{})
 
 	for i := range f.Variables {
 
@@ -90,7 +90,6 @@ func toJSON(filename string) ([]byte, error) {
 		raw_var_type := json.RawMessage(var_type)
 
 		variable := make(map[string]interface{})
-		variable["name"] = f.Variables[i].Name
 
 		if f.Variables[i].DescriptionSet {
 			variable["description"] = f.Variables[i].Description
@@ -98,15 +97,23 @@ func toJSON(filename string) ([]byte, error) {
 		variable["type"] = &raw_var_type
 		variable["default"] = &raw_def_val
 
-		variables = append(variables, variable)
+		variables[f.Variables[i].Name] = variable
 	}
 
-	var outputs []map[string]interface{}
+	locals := make(map[string]map[string]interface{})
+
+	for i := range f.Locals {
+		local := make(map[string]interface{})
+
+		local["value"] = string(f.Locals[i].Expr.Range().SliceBytes(p.Sources()[filename]))
+
+		locals[f.Locals[i].Name] = local
+	}
+
+	outputs := make(map[string]map[string]interface{})
 
 	for i := range f.Outputs {
 		output := make(map[string]interface{})
-
-		output["name"] = f.Outputs[i].Name
 
 		if f.Outputs[i].DescriptionSet {
 			output["description"] = f.Outputs[i].Description
@@ -114,10 +121,10 @@ func toJSON(filename string) ([]byte, error) {
 		output["value"] = string(f.Outputs[i].Expr.Range().SliceBytes(p.Sources()[filename]))
 		output["sensitive"] = f.Outputs[i].SensitiveSet
 
-		outputs = append(outputs, output)
+		outputs[f.Outputs[i].Name] = output
 	}
 
-	result := map[string][]map[string]interface{}{"variables": variables, "outputs": outputs}
+	result := map[string]map[string]map[string]interface{}{"variables": variables, "locals": locals, "outputs": outputs}
 
 	json_s, err := json.Marshal(result)
 

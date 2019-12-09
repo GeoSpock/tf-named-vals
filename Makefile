@@ -1,7 +1,7 @@
 # MIT license
 # Copyright (c) 2019 GeoSpock Ltd.
 
-.PHONY: all clean
+.PHONY: all clean e2e-test
 
 all: tf-named-vals
 
@@ -14,4 +14,5 @@ version.go: VERSION version.go.in Makefile
 tf-named-vals: version.go $(wildcard *.go)
 	go build
 
-
+e2e-test: tf-named-vals
+	./e2e/functional.sh
