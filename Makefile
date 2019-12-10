@@ -43,8 +43,8 @@ build/tf-named-vals-darwin-amd64: $(wildcard *.go)
 
 bdist: build/tf-named-vals-linux-amd64 build/tf-named-vals-darwin-amd64
 	mkdir -p dist
-	tar czf dist/tf-named-vals-linux-amd64.tar.gz build/tf-named-vals-linux-amd64
-	tar czf dist/tf-named-vals-darwin-amd64.tar.gz build/tf-named-vals-darwin-amd64
+	tar czf dist/tf-named-vals-linux-amd64.tar.gz -C build tf-named-vals-linux-amd64
+	tar czf dist/tf-named-vals-darwin-amd64.tar.gz -C build tf-named-vals-darwin-amd64
 
 .PHONY: publish publish-sdist publish-lambda
 
