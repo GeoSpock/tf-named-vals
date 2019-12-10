@@ -5,6 +5,8 @@ SHELL := $(shell command -v bash || echo /bin/bash)
 
 PIPENV_CMD = pipenv
 
+LDFLAGS ?= -ldflags "-X main.Version=$(shell cat VERSION)"
+
 check_deps = @for cmd in $(1); do if ! command -v "$$cmd" &>/dev/null; then printf 'Command %s not found! Aborting.\n' "$$cmd"; exit 1; fi; done
 
 .PHONY: all clean e2e-test bdist develop update-deps pipenv-cmd
@@ -25,21 +27,18 @@ develop: | pipenv-cmd
 update-deps: | pipenv-cmd
 	$(PIPENV_CMD) update
 
-version.go: VERSION version.go.in
-	sed 's/%VERSION%/$(shell cat VERSION)/' version.go.in > version.go
-
-tf-named-vals: version.go $(wildcard *.go)
-	go build
+tf-named-vals: $(wildcard *.go)
+	go build $(LDFLAGS)
 
 e2e-test: tf-named-vals
 	./e2e/functional.sh
 
-build/tf-named-vals-linux-amd64: version.go $(wildcard *.go)
-	GOOS=linux GOARCH=amd64 go build -o "$@"
+build/tf-named-vals-linux-amd64: $(wildcard *.go)
+	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o "$@"
 	chmod +x "$@"
 
-build/tf-named-vals-darwin-amd64: version.go $(wildcard *.go)
-	GOOS=darwin GOARCH=amd64 go build -o "$@"
+build/tf-named-vals-darwin-amd64: $(wildcard *.go)
+	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o "$@"
 	chmod +x "$@"
 
 bdist: build/tf-named-vals-linux-amd64 build/tf-named-vals-darwin-amd64
