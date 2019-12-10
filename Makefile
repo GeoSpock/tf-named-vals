@@ -1,6 +1,8 @@
 # MIT license
 # Copyright (c) 2019 GeoSpock Ltd.
 
+SHELL := $(shell command -v bash || echo /bin/bash)
+
 PIPENV_CMD = pipenv
 
 check_deps = @for cmd in $(1); do if ! command -v "$$cmd" &>/dev/null; then printf 'Command %s not found! Aborting.\n' "$$cmd"; exit 1; fi; done
