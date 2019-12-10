@@ -33,28 +33,28 @@ test_full () {
 {
   "locals": {
     "l1": {
-      "value": "{\n    a = \"one\"\n    \"b\" = \"${var.var2}${var.var3}-l1\"\n  }"
+      "expression": "{\n    a = \"one\"\n    \"b\" = \"${var.var2}${var.var3}-l1\"\n  }"
     },
     "l2": {
-      "value": "var.var4"
+      "expression": "var.var4"
     },
     "l3": {
-      "value": "\"test\""
+      "expression": "\"test\""
     }
   },
   "outputs": {
     "bar": {
       "description": "Secret",
-      "sensitive": true,
-      "value": "\"${local.var1[\"key1\"]}${var.var2}\""
+      "expression": "\"${local.var1[\"key1\"]}${var.var2}\"",
+      "sensitive": true
     },
     "baz": {
-      "sensitive": false,
-      "value": "\"value\""
+      "expression": "\"value\"",
+      "sensitive": false
     },
     "foo": {
-      "sensitive": false,
-      "value": "var.var1"
+      "expression": "var.var1",
+      "sensitive": false
     }
   },
   "variables": {
@@ -151,12 +151,12 @@ test_outputs_only () {
   "locals": {},
   "outputs": {
     "o1": {
-      "sensitive": false,
-      "value": "\"value1\""
+      "expression": "\"value1\"",
+      "sensitive": false
     },
     "o2": {
-      "sensitive": false,
-      "value": "\"value2\""
+      "expression": "\"value2\"",
+      "sensitive": false
     }
   },
   "variables": {}
@@ -170,16 +170,16 @@ test_locals_only () {
 {
   "locals": {
     "l4": {
-      "value": "\"4\""
+      "expression": "\"4\""
     },
     "l5": {
-      "value": "\"5\""
+      "expression": "\"5\""
     },
     "l6": {
-      "value": "6"
+      "expression": "6"
     },
     "l7": {
-      "value": "\"7\""
+      "expression": "\"7\""
     }
   },
   "outputs": {},

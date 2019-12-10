@@ -105,7 +105,7 @@ func toJSON(filename string) ([]byte, error) {
 	for i := range f.Locals {
 		local := make(map[string]interface{})
 
-		local["value"] = string(f.Locals[i].Expr.Range().SliceBytes(p.Sources()[filename]))
+		local["expression"] = string(f.Locals[i].Expr.Range().SliceBytes(p.Sources()[filename]))
 
 		locals[f.Locals[i].Name] = local
 	}
@@ -118,7 +118,7 @@ func toJSON(filename string) ([]byte, error) {
 		if f.Outputs[i].DescriptionSet {
 			output["description"] = f.Outputs[i].Description
 		}
-		output["value"] = string(f.Outputs[i].Expr.Range().SliceBytes(p.Sources()[filename]))
+		output["expression"] = string(f.Outputs[i].Expr.Range().SliceBytes(p.Sources()[filename]))
 		output["sensitive"] = f.Outputs[i].SensitiveSet
 
 		outputs[f.Outputs[i].Name] = output
