@@ -11,23 +11,6 @@ set -euo pipefail
 source shelter.sh
 
 
-TEMP_DIR=$(mktemp -d)
-
-_cleanup () {
-    rm -rf -- "${TEMP_DIR}/test_"*
-
-    rmdir "$TEMP_DIR"
-
-    if [[ "${#SAVED_EXIT_TRAP_CMD[@]}" -gt 0 ]]; then
-        eval "${SAVED_EXIT_TRAP_CMD[2]}"
-    fi
-}
-
-eval "declare -a SAVED_EXIT_TRAP_CMD=($(trap -p EXIT))"
-trap _cleanup EXIT
-
-
-
 test_full () {
     assert_stdout './tf-named-vals all-as-json e2e/main.tf | jq -S .' <<"EOF"
 {

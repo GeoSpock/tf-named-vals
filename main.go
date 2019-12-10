@@ -16,10 +16,14 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+
+var Version string
+
+
 func main() {
 	app := &cli.App{
 		Name: "tf-named-vals",
-		Version: VERSION,
+		Version: Version,
 		Usage: "get named values from Terraform HCL (both version 1 and 2) files",
 		Commands: []*cli.Command{
 			{
