@@ -11,7 +11,7 @@ set -euo pipefail
 source shelter.sh
 
 
-test_full () {
+test_hcl_full () {
     assert_stdout './tf-named-vals all-as-json e2e/main.tf | jq -S .' <<"EOF"
 {
   "locals": {
@@ -74,7 +74,7 @@ EOF
 }
 
 
-test_empty () {
+test_hcl_empty () {
     assert_stdout './tf-named-vals all-as-json e2e/empty.tf | jq -S .' <<"EOF"
 {
   "locals": {},
@@ -85,7 +85,7 @@ EOF
 }
 
 
-test_hcl1 () {
+test_hcl_hcl1 () {
     assert_stdout './tf-named-vals all-as-json e2e/hcl1.tf | jq -S .' <<"EOF"
 {
   "locals": {},
@@ -101,12 +101,12 @@ EOF
 }
 
 
-test_invalid () {
+test_hcl_invalid () {
     assert_fail './tf-named-vals all-as-json e2e/invalid.tf 2>/dev/null'
 }
 
 
-test_vars_only () {
+test_hcl_vars_only () {
     assert_stdout './tf-named-vals all-as-json e2e/vars-only.tf | jq -S .' <<"EOF"
 {
   "locals": {},
@@ -128,7 +128,7 @@ EOF
 }
 
 
-test_outputs_only () {
+test_hcl_outputs_only () {
     assert_stdout './tf-named-vals all-as-json e2e/outputs-only.tf | jq -S .' <<"EOF"
 {
   "locals": {},
@@ -148,7 +148,7 @@ EOF
 }
 
 
-test_locals_only () {
+test_hcl_locals_only () {
     assert_stdout './tf-named-vals all-as-json e2e/locals-only.tf | jq -S .' <<"EOF"
 {
   "locals": {
@@ -172,9 +172,46 @@ EOF
 }
 
 
+test_tfvars_mixed () {
+    assert_stdout './tf-named-vals tfvars-as-json e2e/mixed.tfvars | jq -S .' <<"EOF"
+{
+  "a_list": [
+    "a",
+    "b",
+    "c"
+  ],
+  "a_map": {
+    "key1": {
+      "key1_1": "value1_1",
+      "key1_2": "value1_2"
+    },
+    "key2": "foo",
+    "key3": [
+      "one",
+      "two"
+    ]
+  },
+  "foo": "bar"
+}
+EOF
+}
+
+
+test_tfvars_empty () {
+    assert_stdout './tf-named-vals tfvars-as-json e2e/empty.tfvars | jq -S .' <<"EOF"
+{}
+EOF
+}
+
+
+test_tfvars_invalid () {
+    assert_fail './tf-named-vals tfvars-as-json e2e/invalid.tfvars 2>/dev/null'
+}
+
 
 suite () {
-    shelter_run_test_class All test_
+    shelter_run_test_class HCL test_hcl_
+    shelter_run_test_class tfvars test_tfvars_
 }
 
 usage () {
@@ -197,7 +234,7 @@ main () {
 
     if [[ -n "${ENABLE_CI_MODE:-}" ]]; then
         mkdir -p junit
-        shelter_run_test_suite suite | shelter_junit_formatter >junit/test_libautomated.xml
+        shelter_run_test_suite suite | shelter_junit_formatter >junit/tf-named-vals.xml
     else
         shelter_run_test_suite suite | shelter_human_formatter
     fi
