@@ -234,7 +234,7 @@ main () {
 
     if [[ -n "${ENABLE_CI_MODE:-}" ]]; then
         mkdir -p junit
-        shelter_run_test_suite suite | shelter_junit_formatter >junit/test_libautomated.xml
+        shelter_run_test_suite suite | shelter_junit_formatter >junit/tf-named-vals.xml
     else
         shelter_run_test_suite suite | shelter_human_formatter
     fi
